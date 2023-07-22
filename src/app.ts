@@ -4,17 +4,21 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/auth.routes';
+import profileRoutes from './routes/profile.routes';
 
-const app: Application = express();
-
-app.use(cors());
-app.use(bodyParser.json());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 dotenv.config();
 
+const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(cors());
+
 app.use('/api/auth', authRoutes);
+app.use('/api/profile', profileRoutes);
 app.get('/', (req, res) => {
 	res.send('Live here');
 });
