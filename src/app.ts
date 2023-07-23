@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/auth.routes';
 import profileRoutes from './routes/profile.routes';
+import petsRoutes from './routes/pets.routes';
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(cors());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/pets', petsRoutes);
 app.get('/', (req, res) => {
 	res.send('Live here');
 });

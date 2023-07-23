@@ -25,6 +25,7 @@ model User {
 
   accounts Account[]
   moments  Moment[]
+  pets     Pets[]
 }
 
 model Account {
@@ -44,6 +45,21 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+}
+
+model Pets {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String   @db.ObjectId
+  imageSrc     String
+  name         String
+  badBehavior  String
+  goodBehavior String
+  vaccinations String[]
+  gender       String
+  weight       String
+  age          String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Moment {
