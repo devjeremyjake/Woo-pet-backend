@@ -11,7 +11,7 @@ import { generateOtp } from '../utils/generateOtp';
 import { verifyOtpValidity } from '../utils/verifyOtpValidity';
 
 export const signUp = async (req: Request, res: Response) => {
-	const { name, email, password } = req.body;
+	const { name, email, password, long, lat, city, country } = req.body;
 	const message = 'User created successfully';
 	try {
 		if (!name || !email || !password) {
@@ -32,6 +32,10 @@ export const signUp = async (req: Request, res: Response) => {
 			hashedPassword,
 			otp,
 			otpExpiration: new Date(Date.now() + 600 * 1000),
+			long,
+			lat,
+			city,
+			country,
 		};
 
 		const newUser = await createUser(user);
