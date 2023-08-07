@@ -3,9 +3,12 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+import { v2 as cloudinary } from 'cloudinary';
 import authRoutes from './routes/auth.routes';
 import profileRoutes from './routes/profile.routes';
 import petsRoutes from './routes/pets.routes';
+import categoryRoutes from './routes/category.routes';
+import servicesRoutes from './routes/service.routes';
 
 dotenv.config();
 
@@ -52,9 +55,19 @@ app.get("/swagger.json", (req, res) => {
 
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+cloudinary.config({
+	cloud_name: 'devjeremyjake',
+	api_key: '655477153723734',
+	api_secret: 'k3AtygtlOu0gb9letjTWIPXvMuE',
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/pets', petsRoutes);
+app.use('/api/catrgories', categoryRoutes);
+app.use('/api/services', servicesRoutes);
+
+// test sample
 app.get('/', (req, res) => {
 	res.send('Live here');
 });

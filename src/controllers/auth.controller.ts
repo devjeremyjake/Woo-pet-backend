@@ -16,12 +16,12 @@ export const signUp = async (req: Request, res: Response) => {
 	try {
 		if (!name || !email || !password) {
 			return res
-				.status(401)
+				.status(204)
 				.json({ error: true, message: 'Fields are  required' });
 		}
 		const existingUser = await findUserByEmail(email);
 		if (existingUser) {
-			return res.status(400).json({ error: 'User already exists' });
+			return res.status(203).json({ error: 'User already exists' });
 		}
 		const hashedPassword = await bcrypt.hash(password, 10);
 		const otp = generateOtp();
@@ -31,7 +31,7 @@ export const signUp = async (req: Request, res: Response) => {
 			email,
 			hashedPassword,
 			otp,
-			otpExpiration: new Date(Date.now() + 600 * 1000),
+			otpExpiration: new Date(Date.now() + 20 * 60000),
 			long,
 			lat,
 			city,
@@ -47,24 +47,25 @@ export const signUp = async (req: Request, res: Response) => {
 };
 
 export const signIn = async (req: Request, res: Response) => {
-	const { email, password } = req.body;
+	const { email, password, lat, long, city, country } = req.body;
 	try {
 		if (!email || !password) {
 			return res
-				.status(401)
+				.status(203)
 				.json({ error: true, message: 'Fields are required' });
 		}
 		const existingUser = await findUserByEmail(email);
 		if (!existingUser) {
-			return res.status(400).json({ error: true, message: 'User not found' });
+			return res.status(203).json({ error: true, message: 'User not found' });
 		}
 		const passwordMatch = await bcrypt.compare(
 			password,
 			existingUser.hashedPassword
 		);
 		if (!passwordMatch) {
-			return res.status(401).json({ message: 'Invalid credentials' });
+			return res.status(401).json({ error: 'Invalid credentials' });
 		}
+
 		cookieToken(existingUser, res, 'Sign-in successful');
 	} catch (error) {
 		return res.status(500).json({ message: 'Internal Server Error', error });
@@ -76,15 +77,35 @@ export const forgotPassword = async (req: Request, res: Response) => {
 	try {
 		const existingUser = findUserByEmail(email);
 		if (!existingUser) {
-			return res.status(400).json({ error: true, message: 'User not found' });
+			return res.status(203).json({ error: true, message: 'User not found' });
 		}
 		const otp = generateOtp();
 		const updatedUser = await updateUser(email, {
 			otp,
-			otpExpiration: new Date(Date.now() + 600 * 1000),
+			otpExpiration: new Date(Date.now() + 20 * 1000),
 		});
 		// send to user email
 		cookieToken(updatedUser, res, 'OTP sent successfully');
+	} catch (error) {
+		return res.status(500).json({ error: 'Internal Server Error' });
+	}
+};
+
+export const verifySignupOtp = async (req: Request, res: Response) => {
+	const { otp } = req.body;
+	try {
+		const userId = req.userId;
+		const existingUser = await findUserById(userId);
+		if (!existingUser) {
+			return res.status(203).json({ error: true, message: 'User not found' });
+		}
+		// check if otp is same
+		if (!verifyOtpValidity(existingUser, otp)) {
+			return res.status(203).json({ error: 'Invalid OTP or OTP expired' });
+		}
+		res
+			.status(200)
+			.json({ error: false, message: 'OTP Verified Successfully' });
 	} catch (error) {
 		return res.status(500).json({ error: 'Internal Server Error' });
 	}
@@ -96,7 +117,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
 		const userId = req.userId;
 		const existingUser = await findUserById(userId);
 		if (!existingUser) {
-			return res.status(400).json({ error: true, message: 'User not found' });
+			return res.status(203).json({ error: true, message: 'User not found' });
 		}
 		// check if otp is same
 		if (!verifyOtpValidity(existingUser, otp)) {
@@ -119,7 +140,7 @@ export const resetPassword = async (req: Request, res: Response) => {
 		const userId = req.userId;
 		const existingUser = await findUserById(userId);
 		if (!existingUser) {
-			return res.status(400).json({ error: true, message: 'User not found' });
+			return res.status(203).json({ error: true, message: 'User not found' });
 		}
 		const hashedPassword = await bcrypt.hash(password, 10);
 		await updateUser(existingUser?.email, { hashedPassword });

@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import prisma from '../config/database';
 import { createPets, fetchExisitngPet, fetchPets } from '../models/pets.model';
 export const addNewPet = async (req: Request, res: Response) => {
 	const {
@@ -29,10 +28,15 @@ export const addNewPet = async (req: Request, res: Response) => {
 		if (fetchExisiting) {
 			return res
 				.status(409)
-				.json({ error: 'Pet with the same name already exists for this user' });
+				.json({
+					error: true,
+					message: 'Pet with the same name already exists for this user',
+				});
 		}
 		const newPet = await createPets(data);
-		res.status(201).json({ message: 'Pet added Successfully', pet: newPet });
+		res
+			.status(201)
+			.json({ error: false, message: 'Pet added Successfully', pet: newPet });
 	} catch (error) {
 		res.status(500).json({ error: 'Something went wrong' });
 	}

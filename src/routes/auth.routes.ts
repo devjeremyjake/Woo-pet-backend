@@ -5,6 +5,7 @@ import {
 	signIn,
 	signUp,
 	verifyOtp,
+	verifySignupOtp,
 } from '../controllers/auth.controller';
 import { authenticate } from '../../middleware/authenticate';
 
@@ -143,6 +144,7 @@ router.post('/forgot-password', forgotPassword);
  *         description: Internal server error
  */
 router.post('/verifyOtp', authenticate, verifyOtp);
+router.post('/verifyUser', authenticate, verifySignupOtp);
 router.post('/reset-password', authenticate, resetPassword);
 
 export default router;
