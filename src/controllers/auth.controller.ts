@@ -63,11 +63,11 @@ export const signIn = async (req: Request, res: Response) => {
 			existingUser.hashedPassword
 		);
 		if (!passwordMatch) {
-			return res.status(401).json({ error: 'Invalid credentials' });
+			return res.status(401).json({ message: 'Invalid credentials' });
 		}
 		cookieToken(existingUser, res, 'Sign-in successful');
 	} catch (error) {
-		return res.status(500).json({ error: 'Internal Server Error' });
+		return res.status(500).json({ message: 'Internal Server Error', error });
 	}
 };
 

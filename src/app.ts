@@ -10,13 +10,47 @@ import petsRoutes from './routes/pets.routes';
 dotenv.config();
 
 const app = express();
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUi from "swagger-ui-express";
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
+
+// swagger configuration
+const swaggerDefinition = {
+	info: {
+		title: "Woo Pet API Documentation",
+		version: "1.0.0",
+		description: "A pet service market place",
+	},
+	host: `localhost:${process.env.PORT}`,
+	basePath: "/",
+	securityDefinitions: {
+		bearerAuth: {
+			type: "apiKey",
+			name: "Authorization",
+			in: "header",
+		},
+	},
+};
+
+const options = {
+	swaggerDefinition,
+	apis: ['src/routes/**.ts'],
+};
+
+const swaggerSpec = swaggerJSDoc(options);
+
+app.get("/swagger.json", (req, res) => {
+	res.setHeader("Content-Type", "application/json");
+	res.send(swaggerSpec);
+});
+
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
