@@ -56,8 +56,7 @@ app.get("/swagger.json", (req, res) => {
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/api', [authRoutes, profileRoutes, petsRoutes, categoryRoutes, servicesRoutes]);
-// app.use('/api/profile', profileRoutes);
-// app.use('/api/pets', petsRoutes);
+
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
 	api_key: process.env.CLOUDINARY_API_KEY,
