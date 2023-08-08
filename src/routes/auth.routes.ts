@@ -131,8 +131,8 @@ router.post('/auth/login', login);
  *     responses:
  *       200:
  *         description: Ok
- * 		 203:
- * 		   description: Error
+ *       203:
+ *         description: Error
  *       400:
  *         description: Bad request
  *       401:
