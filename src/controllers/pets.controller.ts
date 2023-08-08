@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import prisma from '../config/database';
-import { createPets, fetchExisitngPet, fetchPets } from '../models/pets.model';
-export const addNewPet = async (req: Request, res: Response) => {
+import { createPets, fetchExistingPet, fetchPets } from '../models/pets.model';
+export const store = async (req: Request, res: Response) => {
 	const {
 		imageSrc,
 		name,
@@ -23,12 +23,12 @@ export const addNewPet = async (req: Request, res: Response) => {
 			vaccinations,
 			gender,
 			weight,
-			age,
+			age
 		};
-		const fetchExisiting = await fetchExisitngPet(userId, name);
-		if (fetchExisiting) {
+		const fetchExisting = await fetchExistingPet(userId, name);
+		if (fetchExisting) {
 			return res
-				.status(409)
+				.status(400)
 				.json({ error: 'Pet with the same name already exists for this user' });
 		}
 		const newPet = await createPets(data);
@@ -38,7 +38,7 @@ export const addNewPet = async (req: Request, res: Response) => {
 	}
 };
 
-export const findUserPets = async (req: Request, res: Response) => {
+export const fetchUserPets = async (req: Request, res: Response) => {
 	const userId = req.userId;
 	try {
 		const pets = await fetchPets(userId);

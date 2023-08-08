@@ -10,7 +10,7 @@ import cookieToken from '../utils/cookieToken';
 import { generateOtp } from '../utils/generateOtp';
 import { verifyOtpValidity } from '../utils/verifyOtpValidity';
 
-export const signUp = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response) => {
 	const { name, email, password, long, lat, city, country } = req.body;
 	const message = 'User created successfully';
 	try {
@@ -46,7 +46,7 @@ export const signUp = async (req: Request, res: Response) => {
 	}
 };
 
-export const signIn = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
 	const { email, password } = req.body;
 	try {
 		if (!email || !password) {

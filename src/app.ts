@@ -52,9 +52,9 @@ app.get("/swagger.json", (req, res) => {
 
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.use('/api/auth', authRoutes);
-app.use('/api/profile', profileRoutes);
-app.use('/api/pets', petsRoutes);
+app.use('/api', [authRoutes, profileRoutes, petsRoutes]);
+// app.use('/api/profile', profileRoutes);
+// app.use('/api/pets', petsRoutes);
 app.get('/', (req, res) => {
 	res.send('Live here');
 });

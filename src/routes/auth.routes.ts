@@ -2,8 +2,8 @@ import { Router } from 'express';
 import {
 	forgotPassword,
 	resetPassword,
-	signIn,
-	signUp,
+	login,
+	register,
 	verifyOtp,
 } from '../controllers/auth.controller';
 import { authenticate } from '../../middleware/authenticate';
@@ -12,7 +12,7 @@ const router: Router = Router();
 
 /**
  * @swagger
- * /api/auth/signup:
+ * /api/auth/register:
  *   post:
  *     tags:
  *       - Auth
@@ -56,17 +56,17 @@ const router: Router = Router();
  *       200:
  *         description: Ok
  *       400:
- *         description: User exist
+ *         description: Bad request
  *       422:
  *         description: Unprocessed entities | Validation error
  *       500:
  *         description: Internal server error
  */
-router.post('/signup', signUp);
+router.post('/auth/register', register);
 
 /**
  * @swagger
- * /api/auth/signin:
+ * /api/auth/login:
  *   post:
  *     tags:
  *       - Auth
@@ -93,7 +93,7 @@ router.post('/signup', signUp);
  *       200:
  *         description: Ok
  *       400:
- *         description: Error
+ *         description: Bad request
  *       401:
  *         description: Unauthenticated
  *       422:
@@ -101,10 +101,9 @@ router.post('/signup', signUp);
  *       500:
  *         description: Internal server error
  */
-router.post('/signin', signIn);
+router.post('/auth/login', login);
 
-
-router.post('/forgot-password', forgotPassword);
+router.post('/auth/forgot-password', forgotPassword);
 
 /**
  * @swagger
@@ -134,7 +133,7 @@ router.post('/forgot-password', forgotPassword);
  *       200:
  *         description: Ok
  *       400:
- *         description: Error
+ *         description: Bad request
  *       401:
  *         description: Unauthenticated
  *       422:
@@ -142,7 +141,44 @@ router.post('/forgot-password', forgotPassword);
  *       500:
  *         description: Internal server error
  */
-router.post('/verifyOtp', authenticate, verifyOtp);
-router.post('/reset-password', authenticate, resetPassword);
+router.post('/auth/verifyOtp', authenticate, verifyOtp);
+
+/**
+ * @swagger
+ * /api/auth/reset-password:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     name: Reset password
+ *     summary: Reset password
+ *     security:
+ *       - bearerAuth: []
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             password:
+ *               type: string
+ *         required:
+ *           - password
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthenticated
+ *       422:
+ *         description: Unprocessed entities
+ *       500:
+ *         description: Internal server error
+ */
+router.post('/auth/reset-password', authenticate, resetPassword);
 
 export default router;

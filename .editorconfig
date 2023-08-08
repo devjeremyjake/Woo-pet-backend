@@ -1,3 +1,13 @@
 root = true
+charset = utf-8
 
-[.ts]
+insert_final_newline = false
+trim_trailing_whitespace = true
+
+[*.ts,*.*.ts]
+indent_size = 2
+indent_style = space
+
+[*.json]
+indent_size = 2
+indent_style = space

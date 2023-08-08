@@ -13,7 +13,7 @@ export const fetchPets = async (id: string) => {
 	});
 };
 
-export const fetchExisitngPet = async (id: string, name: string) => {
+export const fetchExistingPet = async (id: string, name: string) => {
 	return await prisma.pets.findFirst({
 		where: {
 			userId: id,
