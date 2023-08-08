@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import prisma from '../config/database';
 import { createPets, fetchExistingPet, fetchPets } from '../models/pets.model';
+
+
 export const store = async (req: Request, res: Response) => {
 	const {
 		imageSrc,
@@ -12,6 +14,7 @@ export const store = async (req: Request, res: Response) => {
 		weight,
 		age,
 	} = req.body;
+
 	const userId = req.userId;
 	try {
 		const data = {
@@ -32,9 +35,10 @@ export const store = async (req: Request, res: Response) => {
 				.json({ error: 'Pet with the same name already exists for this user' });
 		}
 		const newPet = await createPets(data);
-		res.status(201).json({ message: 'Pet added Successfully', pet: newPet });
+		return res.status(201)
+			.json({ error: false, message: 'Pet added Successfully', pet: newPet });
 	} catch (error) {
-		res.status(500).json({ error: 'Something went wrong' });
+		return res.status(500).json({ error: 'Something went wrong' });
 	}
 };
 
@@ -42,7 +46,7 @@ export const fetchUserPets = async (req: Request, res: Response) => {
 	const userId = req.userId;
 	try {
 		const pets = await fetchPets(userId);
-		res.status(201).json({ error: false, pets });
+		res.status(200).json({ error: false, pets });
 	} catch (error) {
 		res.status(500).json({ error: 'Something went wrong' });
 	}

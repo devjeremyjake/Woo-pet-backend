@@ -12,13 +12,17 @@ export const authenticate = (
 ) => {
 	const token = req.header('Authorization')?.replace('Bearer ', '');
 	if (!token) {
-		return res.status(401).json({ error: 'Authentication required' });
+		return res
+			.status(401)
+			.json({ error: true, message: 'Authentication required' });
 	}
 	try {
 		const decoded = jwt.verify(token, jwtSecret) as { userId: string };
 		req.userId = decoded.userId;
 		next();
 	} catch (error) {
-		return res.status(401).json({ error: 'Invalid or expired token' });
+		return res
+			.status(401)
+			.json({ error: true, message: 'Invalid or expired token' });
 	}
 };

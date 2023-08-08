@@ -5,6 +5,7 @@ import {
 	login,
 	register,
 	verifyOtp,
+	verifySignupOtp,
 } from '../controllers/auth.controller';
 import { authenticate } from '../../middleware/authenticate';
 
@@ -103,6 +104,44 @@ router.post('/auth/register', register);
  */
 router.post('/auth/login', login);
 
+/**
+ * @swagger
+ * /api/auth/forgot-password:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     name: Forgot password
+ *     summary: Forgot password
+ *     security:
+ *       - bearerAuth: []
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *         required:
+ *           - email
+ *     responses:
+ *       200:
+ *         description: Ok
+ * 		 203:
+ * 		   description: Error
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthenticated
+ *       422:
+ *         description: Unprocessed entities
+ *       500:
+ *         description: Internal server error
+ */
 router.post('/auth/forgot-password', forgotPassword);
 
 /**
@@ -180,5 +219,43 @@ router.post('/auth/verifyOtp', authenticate, verifyOtp);
  *         description: Internal server error
  */
 router.post('/auth/reset-password', authenticate, resetPassword);
+
+/**
+ * @swagger
+ * /api/auth/user/verify:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     name: Verify user
+ *     summary: Verify user
+ *     security:
+ *       - bearerAuth: []
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             otp:
+ *               type: string
+ *         required:
+ *           - otp
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthenticated
+ *       422:
+ *         description: Unprocessed entities
+ *       500:
+ *         description: Internal server error
+ */
+router.post('/auth/user/verify', authenticate, verifySignupOtp);
 
 export default router;

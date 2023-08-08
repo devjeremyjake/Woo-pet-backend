@@ -1,10 +1,9 @@
 import { UserInfo } from '../types/custom';
 
 export const verifyOtpValidity = (user: UserInfo, otp: string): boolean => {
-	const currentTime = new Date().getTime();
+	const currentTime = new Date();
 	const isOtpValid =
-		user.otp === otp &&
-		user.otpExpiration &&
-		user.otpExpiration.getTime() > currentTime;
+		user.otp === otp && user.otpExpiration.getTime() > currentTime.getTime();
+	console.log('Sent', otp, isOtpValid);
 	return isOtpValid;
 };
