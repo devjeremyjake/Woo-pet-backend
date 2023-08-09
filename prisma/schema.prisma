@@ -76,8 +76,6 @@ model Moment {
   imageSrc  String
   createdAt DateTime  @default(now())
   userId    String    @db.ObjectId
-  startDate DateTime
-  endDate   DateTime
   likes     String[]
   comments  Comment[]
 
@@ -97,6 +95,7 @@ model Service {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
   price             Float
   description       String
+  experience        String
   providerLatitude  Float?
   providerLongitude Float?
   createdAt         DateTime @default(now())
@@ -119,17 +118,19 @@ model Category {
 }
 
 model Order {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  status    String // Define order status (e.g., "pending", "completed", etc.)
-
-  userId    String  @db.ObjectId
-  serviceId String  @db.ObjectId
-  review    Review?
-
-  service Service @relation(fields: [serviceId], references: [id])
-  user    User    @relation(fields: [userId], references: [id])
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  walkDate     DateTime
+  walkDuration Int
+  walkTime     String
+  userId       String   @db.ObjectId
+  serviceId    String   @db.ObjectId
+  review       Review?
+  service      Service  @relation(fields: [serviceId], references: [id])
+  user         User     @relation(fields: [userId], references: [id])
+  payment      Payment?
+  status       String // Define order status (e.g., "pending", "completed", etc.)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Review {
@@ -145,4 +146,16 @@ model Review {
   user    User    @relation(fields: [userId], references: [id])
   order   Order?  @relation(fields: [orderId], references: [id])
   service Service @relation(fields: [serviceId], references: [id])
+}
+
+model Payment {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  amount       Float
+  reference    String   @unique
+  lastCardFour String
+  orderId      String   @unique @db.ObjectId
+  status       String
+  order        Order?   @relation(fields: [orderId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
