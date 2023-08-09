@@ -28,6 +28,6 @@ const router: Router = Router();
  *       500:
  *         description: Internal server error
  */
-router.get('/', authenticate, getProfile);
+router.get('/users/profile', authenticate, getProfile);
 
 export default router;
