@@ -94,14 +94,16 @@ model Comment {
 model Service {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
   price             Float
-  description       String
   experience        String
-  providerLatitude  Float?
-  providerLongitude Float?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  description       String
+  lat               Float?
+  lng               Float?
+  fileUrl           String?
+  fileKey           String?
   userId            String   @db.ObjectId
   categoryId        String   @db.ObjectId
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
   orders            Order[]
   reviews           Review[]
   provider          User     @relation(fields: [userId], references: [id])
