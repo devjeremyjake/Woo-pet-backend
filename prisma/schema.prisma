@@ -59,7 +59,8 @@ model Account {
 model Pets {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   userId       String   @db.ObjectId
-  imageSrc     String
+  imageUrl     String
+  imageKey     String
   name         String
   badBehavior  String
   goodBehavior String
@@ -73,7 +74,8 @@ model Pets {
 
 model Moment {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  imageSrc  String
+  imageUrl  String
+  imageKey  String
   createdAt DateTime  @default(now())
   userId    String    @db.ObjectId
   likes     String[]
@@ -92,22 +94,22 @@ model Comment {
 }
 
 model Service {
-  id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  price             Float
-  experience        String
-  description       String
-  lat               Float?
-  lng               Float?
-  fileUrl           String?
-  fileKey           String?
-  userId            String   @db.ObjectId
-  categoryId        String   @db.ObjectId
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  orders            Order[]
-  reviews           Review[]
-  provider          User     @relation(fields: [userId], references: [id])
-  category          Category @relation(fields: [categoryId], references: [id])
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  price       Float
+  experience  String
+  description String
+  lat         Float?
+  lng         Float?
+  fileUrl     String?
+  fileKey     String?
+  userId      String   @db.ObjectId
+  categoryId  String   @db.ObjectId
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  orders      Order[]
+  reviews     Review[]
+  provider    User     @relation(fields: [userId], references: [id])
+  category    Category @relation(fields: [categoryId], references: [id])
 }
 
 model Category {
