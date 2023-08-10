@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { authenticate } from '../../middleware/authenticate';
 import { cloudinaryParser } from '../../middleware/cloudinary';
-import { storeService, showService, deleteService } from '../controllers/service.controller';
+import { storeService, showService, servicesByUser, deleteService } from '../controllers/service.controller';
 
 const router: Router = Router();
 
@@ -90,12 +90,34 @@ router.post('/users/services/create', authenticate, cloudinaryParser.single('pic
  *         description: Ok
  *       400:
  *         description: Bad request
- *       422:
- *         description: Unprocessed entities | Validation error
  *       500:
  *         description: Internal server error
  */
 router.get('/services/:id', showService);
+
+/**
+ * @swagger
+ * /api/users/services:
+ *   get:
+ *     tags:
+ *       - User
+ *     name: Fetch all user's services
+ *     summary: Fetch all user's services
+ *     security:
+ *       - bearerAuth: []
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/users/services', authenticate, servicesByUser);
 
 /**
  * @swagger
@@ -126,8 +148,6 @@ router.get('/services/:id', showService);
  *         description: Ok
  *       400:
  *         description: Bad request
- *       422:
- *         description: Unprocessed entities | Validation error
  *       500:
  *         description: Internal server error
  */

@@ -4,6 +4,7 @@ import { cloudinary } from '../../middleware/cloudinary';
 import {
 	createService,
 	findServiceById,
+	getAllUserServices,
 	updateUser,
 	destroy
 } from '../models/service.model';
@@ -18,7 +19,6 @@ const storeService = async (req: Request, res: Response) => {
 		lng
 	} = req.body;
 	const userId = req.userId;
-	console.log(req.file);
 	const fileKey = req.file?.filename;
 	const fileUrl = req.file?.path;
 
@@ -56,16 +56,26 @@ const showService = async (req: Request, res: Response) => {
 	}
 };
 
+const servicesByUser = async (req: Request, res: Response) => {
+	const userId = req.userId;
+
+	try {
+		// Find all user's services
+		const services = await getAllUserServices(userId);
+
+		return res.status(200).json({ data: services });
+	} catch (error) {
+		return res.status(500).json({ message: 'Could not find service', error });
+	}
+};
+
 const deleteService = async (req: Request, res: Response) => {
 	const serviceId = req.params.id;
 
 	try {
 		// Find service by id
 		const service = await destroy(serviceId);
-		// console.log(service);
-		if (service) await cloudinary.uploader.destroy(service.fileKey!);
-		// await cloudinary.uploader.destroy('woopet/syc3c5gypcpeszgybv2n.jpg');
-
+		if (service) await cloudinary.uploader.destroy(service.fileKey!, {});
 		return res.status(200).json({ message: 'Service has been deleted.' });
 	} catch (error) {
 		return res.status(500).json({ message: 'Could not delete service', error });
@@ -75,5 +85,6 @@ const deleteService = async (req: Request, res: Response) => {
 export {
 	storeService,
 	showService,
+	servicesByUser,
 	deleteService
 };

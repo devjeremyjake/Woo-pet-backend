@@ -22,6 +22,19 @@ const findServiceById = async (
 	});
 };
 
+const getAllUserServices = async (
+	userId: string
+): Promise<ServiceInfo | any> => {
+	return await prisma.service.findMany({
+		where: { userId },
+		include: {
+			category: true, 
+			orders: true, 
+			reviews: true
+		},
+	});
+};
+
 const updateUser = async (
 	id: string,
 	data: ServiceUpdateInput
@@ -43,6 +56,7 @@ export {
 	ServiceUpdateInput,
 	createService,
 	findServiceById,
+	getAllUserServices,
 	updateUser,
 	destroy
 };
