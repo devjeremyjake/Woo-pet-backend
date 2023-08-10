@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { authenticate } from '../../middleware/authenticate';
 import { cloudinaryParser } from '../../middleware/cloudinary';
-import { store, momentsByUser, deleteMoment } from '../controllers/moment.controller';
+import { store, momentsByUser, deleteMoment, upsertLike } from '../controllers/moment.controller';
 
 const router: Router = Router();
 
@@ -11,7 +11,7 @@ const router: Router = Router();
  *   post:
  *     tags:
  *       - Moments
- *     name: Create moment
+ *     name: Like or unlike a moment
  *     summary: Create  moment
  *     security:
  *       - bearerAuth: []
@@ -59,6 +59,55 @@ router.post('/moments/create', authenticate, cloudinaryParser.single('image'), s
  *         description: Internal server error
  */
 router.get('/users/moments', authenticate, momentsByUser);
+
+/**
+ * @swagger
+ * /api/moments/{momentId}/like-or-unlike/upsert:
+ *   post:
+ *     tags:
+ *       - Moments
+ *     name: Like or unlike a moment
+ *     summary: Like or unlike a moment
+ *     security:
+ *       - bearerAuth: []
+ *     produces:
+ *       - application/json
+ *     consumes:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: momentId
+ *         schema:
+ *           type: object
+ *           properties:
+ *             momentId:
+ *               type: string
+ *         required:
+ *           - momentId
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             userId:
+ *               type: string
+ *             like:
+ *               type: boolean
+ *               format: boolean
+ *         required:
+ *           - userId
+ *           - like
+ *     responses:
+ *       '202':
+ *         description: Moment created successfully
+ *       '403':
+ *         description: No auth token
+ *       '422':
+ *         description: Unprocessed entity
+ *       '500':
+ *         description: Internal server error
+ */
+router.put('/moments/:id/like-or-unlike/upsert', authenticate, upsertLike);
 
 /**
  * @swagger

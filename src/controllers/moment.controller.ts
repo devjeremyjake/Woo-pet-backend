@@ -4,7 +4,8 @@ import { cloudinary } from '../../middleware/cloudinary';
 import {
 	createMoment,
 	getAllUserMoments,
-	destroy
+	destroy,
+	likeOrUnlike
 } from '../models/moment.model';
 
 const store = async (req: Request, res: Response) => {
@@ -53,8 +54,23 @@ const deleteMoment = async (req: Request, res: Response) => {
 	}
 };
 
+const upsertLike = async (req: Request, res: Response) => {
+	const { userId, like } = req.body;
+	const momentId = req.params.momentId;
+	const isLiked = like == 'true';
+	try {
+		// Find all user's moments
+		const moments = await likeOrUnlike(momentId, userId, isLiked);
+
+		return res.status(202).json({ message: 'Moment was successfully updated.', data: moments });
+	} catch (error) {
+		return res.status(500).json({ message: 'Could not update moment', error });
+	}
+};
+
 export {
 	store,
 	momentsByUser,
 	deleteMoment,
+	upsertLike
 };

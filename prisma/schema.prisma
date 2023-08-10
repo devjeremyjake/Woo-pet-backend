@@ -86,6 +86,7 @@ model Moment {
 
 model Comment {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  comment   String
   userId    String   @db.ObjectId
   momentId  String   @db.ObjectId
   createdAt DateTime @default(now())
