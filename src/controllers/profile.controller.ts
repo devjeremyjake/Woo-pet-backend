@@ -10,6 +10,7 @@ export const getProfile = async (req: Request, res: Response) => {
 		existingUser.hashedPassword = undefined;
 		existingUser.otp = undefined;
 		existingUser.otpExpiration = undefined;
+		delete existingUser.password;
 		return res.status(200).json({ error: false, user: existingUser });
 	} catch (error) {
 		return res.status(500).json({ error: 'Internal Server Error' });

@@ -13,7 +13,7 @@ const cloudinaryStorage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: (req, file) => {
         return {
-            folder: process.env.CLOUDINARY_CLOUD_NAME, // Replace with the desired folder name in Cloudinary
+            folder: process.env.CLOUDINARY_FOLDER_NAME, // Replace with the desired folder name in Cloudinary
         };
     },
 });
