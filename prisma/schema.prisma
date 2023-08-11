@@ -15,10 +15,11 @@ model User {
   name           String?
   email          String?   @unique
   emailVerified  DateTime?
-  image          String?
+  imageUrl       String?
+  imageKey       String?
   hashedPassword String?
   otp            String?
-  otpExpiration  DateTime
+  otpExpiration  DateTime?
   long           Float?
   lat            Float?
   city           String?
