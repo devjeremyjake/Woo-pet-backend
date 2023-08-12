@@ -57,8 +57,10 @@ async function main() {
                 experience,
                 fileKey,
                 fileUrl,
-                lat: serviceLat,
-                lng: serviceLng
+                location: {
+                  type: 'Point',
+                  coordinates: [serviceLng, serviceLat]
+                }
               }
             ]
           }

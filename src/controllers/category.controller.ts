@@ -7,17 +7,19 @@ import {
 	updateCategory,
 	deleteCategory
 } from '../models/category.model';
+import slugify from 'slugify';
 
 const store = async (req: Request, res: Response) => {
 	const { name, description } = req.body;
 	try {
-		const fetchExisiting = await fetchExistingCategory(name);
-		if (fetchExisiting) return res.status(203).json({
+		const fetchExisting = await fetchExistingCategory(name);
+		if (fetchExisting) return res.status(203).json({
 			error: true,
 			message: 'Category with the same name already exists',
 		});
 
-		const response = await createCategory({ name, description });
+		const slug = slugify(name);
+		const response = await createCategory({ name, description, slug });
 		res.status(201).json({
 			error: false,
 			data: response,
@@ -59,7 +61,8 @@ const update = async (req: Request, res:Response) => {
 			message: 'Category with the same name already exists',
 		});
 
-		const response = await updateCategory(id, { name, description });
+		const slug = slugify(name);
+		const response = await updateCategory(id, { name, description, slug });
 		return res.status(202).json({
 			error: false,
 			data: response,

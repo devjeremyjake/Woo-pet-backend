@@ -8,7 +8,8 @@ import {
 	getAllUserServices,
 	updateUser,
 	destroy,
-	servicesNearYou
+	servicesNearYou,
+	suggestedServices
 } from '../models/service.model';
 
 const storeService = async (req: Request, res: Response) => {
@@ -85,12 +86,7 @@ const deleteService = async (req: Request, res: Response) => {
 };
 
 const fetchServicesNearYou = async (req: Request, res: Response) => {
-	const userId = req.userId;
 	const { page, page_size, lat, lng, distance } : any = req.query;
-	// let page:any = req.query.page;
-	// let page_size: any = req.query.page_size;
-	// let lat: any = req.query.lat;
-	// let lng: any = req.query.lng;
 	const p: number = typeof page === 'string' ? parseInt(page) : page;
 	const pageSize: number = typeof page_size === 'string' ? parseInt(page_size) : page_size;
 	const latitude: number = typeof lat === 'string' ? parseFloat(lat) : lat;
@@ -109,10 +105,28 @@ const fetchServicesNearYou = async (req: Request, res: Response) => {
 	}
 };
 
+const suggestedServicesForUser = async (req: Request, res: Response) => {
+	const { page, page_size, category } : any = req.query;
+	const p: number = typeof page === 'string' ? parseInt(page) : page;
+	const pageSize: number = typeof page_size === 'string' ? parseInt(page_size) : page_size;
+
+	const paginateData = paginate(p, pageSize);
+
+	try {
+		// Suggested services for user
+		const services = await suggestedServices(category, paginateData.offset, paginateData.limit, p, pageSize);
+
+		return res.status(200).json({ data: services });
+	} catch (error) {
+		return res.status(500).json({ message: 'Could not find service', error });
+	}
+};
+
 export {
 	storeService,
 	showService,
 	servicesByUser,
 	deleteService,
-	fetchServicesNearYou
+	fetchServicesNearYou,
+	suggestedServicesForUser
 };

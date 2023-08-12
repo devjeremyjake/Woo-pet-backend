@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { authenticate } from '../../middleware/authenticate';
 import { cloudinaryParser } from '../../middleware/cloudinary';
-import { storeService, showService, servicesByUser, deleteService, fetchServicesNearYou } from '../controllers/service.controller';
+import { storeService, showService, servicesByUser, deleteService, fetchServicesNearYou, suggestedServicesForUser } from '../controllers/service.controller';
 
 const router: Router = Router();
 
@@ -155,12 +155,14 @@ router.delete('/users/services/delete/:id', authenticate, deleteService);
 
 /**
  * @swagger
- * /api/services/nearest/all:
+ * /api/users/services/nearest:
  *   get:
  *     tags:
  *       - Service
  *     name: Show services near you
  *     summary: Show services near you
+ *     security:
+ *       - bearerAuth: []
  *     consumes:
  *       - application/json
  *     produces:
@@ -201,6 +203,48 @@ router.delete('/users/services/delete/:id', authenticate, deleteService);
  *       500:
  *         description: Internal server error
  */
-router.get('/services/nearest/all', fetchServicesNearYou);
+router.get('/users/services/nearest', fetchServicesNearYou);
+
+/**
+ * @swagger
+ * /api/users/services/suggested:
+ *   get:
+ *     tags:
+ *       - Service
+ *     name: Suggest services for user
+ *     summary: Suggest services for user
+ *     security:
+ *       - bearerAuth: []
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         type: number
+ *         value: 1
+ *         required: true
+ *       - in: query
+ *         name: page_size
+ *         description: number of record to show per page
+ *         type: number
+ *         value: 10
+ *         required: true
+ *       - in: query
+ *         name: category
+ *         description: service category (e.g dog-walking)
+ *         type: string
+ *         example: dog-walking
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/users/services/suggested', suggestedServicesForUser);
 
 export default router;

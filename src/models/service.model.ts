@@ -1,7 +1,7 @@
 import prisma from '../config/database';
 import { Prisma } from '@prisma/client';
 import { ServiceInfo } from '../types/custom';
-import { Pager, pagination, paginate } from '../utils/helper';
+import { pagination } from '../utils/helper';
 import { coordinateCalculator } from '../utils/distanceCalculator'
 import { JsonObject } from 'swagger-ui-express';
 
@@ -56,7 +56,7 @@ const destroy = async (id: string): Promise<ServiceInfo> => {
 };
 
 const servicesNearYou = async (lat: number, lng: number, skip: number, take: number, page: number, pageSize: number, distanceInKm: number): Promise<JsonObject> => {
-	// const maxDistance = 5; // in km
+	// const maxDistance = 10000; // in km
 	
 	// const services = await prisma.service.findRaw({
 	// 	filter: {
@@ -66,7 +66,15 @@ const servicesNearYou = async (lat: number, lng: number, skip: number, take: num
 	// 					type: "Point",  
 	// 					coordinates: [ lng, lat ] 
 	// 				},
-	// 				$maxDistance: maxDistance
+	// 				distanceField: 'distance',
+	// 				$maxDistance: maxDistance,
+	// 				spherical: true
+	// 			},
+	// 			$geoNear: {
+	// 				near: { type: "Point", coordinates: [ lng, lat ] },
+	// 				distanceField: 'distance',
+	// 				maxDistance: maxDistance,
+	// 				spherical: true
 	// 			}
 	// 		}
 	// 	},
@@ -79,7 +87,8 @@ const servicesNearYou = async (lat: number, lng: number, skip: number, take: num
 	const services = await prisma.service.findMany({});
 	let servicesWith10Km: any[] = [];
 	services.forEach((service) => {
-		var distance = coordinateCalculator(service.lat!, service.lng!, lat, lng);
+		var coordinates: any = service.location;
+		var distance = coordinateCalculator(coordinates['coordinates'][1], coordinates['coordinates'][0], lat, lng);
 		if (distance <= distanceInKm) servicesWith10Km.push({...service, distance_in_km: distance });
 	});
 
@@ -94,6 +103,28 @@ const servicesNearYou = async (lat: number, lng: number, skip: number, take: num
 	return data;
 };
 
+const suggestedServices = async (category: string, skip: number, take: number, page: number, pageSize: number): Promise<JsonObject> => {
+	const services = await prisma.service.findMany({
+		include: {
+			category: true
+		},
+		where: {
+			category: {
+				slug: category
+			}
+		}
+	});
+
+	const startIndex = skip;
+	const endIndex = (startIndex + take);
+	let data: any;
+	let result: any[];
+	result = services.slice(startIndex < 1 ? 0 : startIndex, endIndex);
+	data = pagination(result, services.length, page, pageSize);
+
+	return data;
+};
+
 export {
 	ServiceUpdateInput,
 	createService,
@@ -101,5 +132,6 @@ export {
 	getAllUserServices,
 	updateUser,
 	destroy,
-	servicesNearYou
+	servicesNearYou,
+	suggestedServices
 };
