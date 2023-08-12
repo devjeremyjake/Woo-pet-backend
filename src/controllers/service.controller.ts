@@ -1,12 +1,14 @@
 import { Request, Response } from 'express';
 import { cloudinary } from '../../middleware/cloudinary';
+import { paginate, pagination } from '../utils/helper';
 
 import {
 	createService,
 	findServiceById,
 	getAllUserServices,
 	updateUser,
-	destroy
+	destroy,
+	servicesNearYou
 } from '../models/service.model';
 
 const storeService = async (req: Request, res: Response) => {
@@ -82,9 +84,35 @@ const deleteService = async (req: Request, res: Response) => {
 	}
 };
 
+const fetchServicesNearYou = async (req: Request, res: Response) => {
+	const userId = req.userId;
+	const { page, page_size, lat, lng, distance } : any = req.query;
+	// let page:any = req.query.page;
+	// let page_size: any = req.query.page_size;
+	// let lat: any = req.query.lat;
+	// let lng: any = req.query.lng;
+	const p: number = typeof page === 'string' ? parseInt(page) : page;
+	const pageSize: number = typeof page_size === 'string' ? parseInt(page_size) : page_size;
+	const latitude: number = typeof lat === 'string' ? parseFloat(lat) : lat;
+	const longitude: number = typeof lng === 'string' ? parseFloat(lng) : lng;
+	const distanceInKim: number = typeof distance === 'string' ? parseFloat(distance) : distance;
+
+	const paginateData = paginate(p, pageSize);
+
+	try {
+		// Find all user's services
+		const services = await servicesNearYou(latitude, longitude, paginateData.offset, paginateData.limit, p, pageSize, distanceInKim);
+
+		return res.status(200).json({ data: services });
+	} catch (error) {
+		return res.status(500).json({ message: 'Could not find service', error });
+	}
+};
+
 export {
 	storeService,
 	showService,
 	servicesByUser,
-	deleteService
+	deleteService,
+	fetchServicesNearYou
 };

@@ -15,6 +15,7 @@ const paginate = (page: number, pageSize: number) => {
 const pagination = (result: any, count: number, page: number, pageSize: number) => {
   let totalCount = count;
   let totalPage = Math.ceil(totalCount / pageSize);
+  let paginated = paginate(page, pageSize);
   const data: Pager = {
     data: [],
     meta: {}
@@ -23,8 +24,8 @@ const pagination = (result: any, count: number, page: number, pageSize: number) 
     data.meta = {
       current_page: page,
       per_page: pageSize,
-      from: 1,
-      to: page,
+      from: paginated.offset + 1,
+      to: paginated.offset + paginated.limit,
       total: totalCount,
       last_page: totalPage,
       prev: page <= totalPage ? page == 1 ? null : page - 1 : null,
@@ -39,5 +40,6 @@ const pagination = (result: any, count: number, page: number, pageSize: number) 
 
 export {
   paginate,
-  pagination
+  pagination,
+  Pager
 };

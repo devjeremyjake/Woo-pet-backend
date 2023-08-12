@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { authenticate } from '../../middleware/authenticate';
 import { cloudinaryParser } from '../../middleware/cloudinary';
-import { storeService, showService, servicesByUser, deleteService } from '../controllers/service.controller';
+import { storeService, showService, servicesByUser, deleteService, fetchServicesNearYou } from '../controllers/service.controller';
 
 const router: Router = Router();
 
@@ -152,5 +152,55 @@ router.get('/users/services', authenticate, servicesByUser);
  *         description: Internal server error
  */
 router.delete('/users/services/delete/:id', authenticate, deleteService);
+
+/**
+ * @swagger
+ * /api/services/nearest/all:
+ *   get:
+ *     tags:
+ *       - Service
+ *     name: Show services near you
+ *     summary: Show services near you
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: query
+ *         name: lat
+ *         type: number
+ *         description: Latitude of current user
+ *         required: true
+ *       - in: query
+ *         name: lng
+ *         type: number
+ *         description: Longitude of current user
+ *         required: true
+ *       - in: query
+ *         name: page
+ *         type: number
+ *         value: 1
+ *         required: true
+ *       - in: query
+ *         name: page_size
+ *         description: number of record to show per page
+ *         type: number
+ *         value: 10
+ *         required: true
+ *       - in: query
+ *         name: distance
+ *         description: distance in kilometre
+ *         type: number
+ *         value: 10
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/services/nearest/all', fetchServicesNearYou);
 
 export default router;

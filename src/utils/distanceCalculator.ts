@@ -1,4 +1,12 @@
-export const cordinateCalculator = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
+/**
+ * Calculator distance in kilometre between two coordinates
+ * @param lat1 number
+ * @param lng1 number
+ * @param lat2 number
+ * @param lng2 number
+ * @returns number
+ */
+export const coordinateCalculator = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
 	if ((lat1 == lat2) && (lng1 == lng2)) {
         return 0;
       } else {
@@ -15,6 +23,6 @@ export const cordinateCalculator = (lat1: number, lng1: number, lat2: number, ln
   
         var rad = 6371;
         var c = 2 * Math.asin(Math.sqrt(a));
-        return rad * c;
+        return Math.abs(parseFloat((rad * c).toFixed(2)));
     }
 };

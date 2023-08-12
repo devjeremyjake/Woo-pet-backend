@@ -100,8 +100,6 @@ model Service {
   price       Float
   experience  String
   description String
-  lat         Float?
-  lng         Float?
   fileUrl     String?
   fileKey     String?
   userId      String   @db.ObjectId
