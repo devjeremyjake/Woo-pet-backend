@@ -10,7 +10,7 @@ import cookieToken from '../utils/cookieToken';
 import { generateOtp } from '../utils/generateOtp';
 import { verifyOtpValidity } from '../utils/verifyOtpValidity';
 
-export const register = async (req: Request, res: Response) => {
+const register = async (req: Request, res: Response) => {
 	const { name, email, password, long, lat, city, country } = req.body;
 	const message = 'User created successfully';
 	try {
@@ -46,7 +46,7 @@ export const register = async (req: Request, res: Response) => {
 	}
 };
 
-export const login = async (req: Request, res: Response) => {
+const login = async (req: Request, res: Response) => {
 	const { email, password } = req.body;
 	try {
 		if (!email || !password) return res.status(203).json({ error: true, message: 'Fields are required' });
@@ -62,7 +62,7 @@ export const login = async (req: Request, res: Response) => {
 	}
 };
 
-export const forgotPassword = async (req: Request, res: Response) => {
+const forgotPassword = async (req: Request, res: Response) => {
 	const { email } = req.body;
 	try {
 		const existingUser = findUserByEmail(email);
@@ -81,7 +81,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
 	}
 };
 
-export const verifySignupOtp = async (req: Request, res: Response) => {
+const verifySignupOtp = async (req: Request, res: Response) => {
 	const { otp } = req.body;
 	try {
 		const userId = req.userId;
@@ -97,7 +97,7 @@ export const verifySignupOtp = async (req: Request, res: Response) => {
 	}
 };
 
-export const verifyOtp = async (req: Request, res: Response) => {
+const verifyOtp = async (req: Request, res: Response) => {
 	const { otp } = req.body;
 	try {
 		const userId = req.userId;
@@ -113,7 +113,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
 	}
 };
 
-export const resetPassword = async (req: Request, res: Response) => {
+const resetPassword = async (req: Request, res: Response) => {
 	const { password } = req.body;
 	try {
 		const userId = req.userId;
@@ -127,4 +127,13 @@ export const resetPassword = async (req: Request, res: Response) => {
 	} catch (error) {
 		return res.status(500).json({ error: 'Internal Server Error' });
 	}
+};
+
+export {
+	register,
+	login,
+	forgotPassword,
+	verifySignupOtp,
+	verifyOtp,
+	resetPassword
 };

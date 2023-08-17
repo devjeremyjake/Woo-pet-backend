@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { findUserById } from '../models/user.model';
 
-export const getProfile = async (req: Request, res: Response) => {
+const getProfile = async (req: Request, res: Response) => {
 	try {
 		const userId = req.userId;
 		const existingUser = await findUserById(userId);
@@ -12,7 +12,11 @@ export const getProfile = async (req: Request, res: Response) => {
 		existingUser.otpExpiration = undefined;
 		delete existingUser.password;
 		return res.status(200).json({ error: false, user: existingUser });
-	} catch (error) {
-		return res.status(500).json({ error: 'Internal Server Error' });
+	} catch (error: any) {
+		return res.status(500).json({ message: 'Internal Server Error', error: error.message });
 	}
+};
+
+export {
+	getProfile
 };

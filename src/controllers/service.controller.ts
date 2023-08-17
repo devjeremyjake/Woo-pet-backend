@@ -40,9 +40,9 @@ const storeService = async (req: Request, res: Response) => {
 		});
 
 		return res.status(201).json({ message: 'Service added successfully', data: response });
-	} catch (error) {
+	} catch (error: any) {
 		await cloudinary.uploader.destroy(fileKey!);
-		return res.status(500).json({ message: 'Could not add service', error });
+		return res.status(500).json({ message: 'Could not add service', error: error.message });
 	}
 };
 
@@ -54,8 +54,8 @@ const showService = async (req: Request, res: Response) => {
 		const service = await findServiceById(serviceId);
 
 		return res.status(200).json({ data: service });
-	} catch (error) {
-		return res.status(500).json({ message: 'Could not find service', error });
+	} catch (error: any) {
+		return res.status(500).json({ message: 'Could not find service', error: error.message });
 	}
 };
 
@@ -67,8 +67,8 @@ const servicesByUser = async (req: Request, res: Response) => {
 		const services = await getAllUserServices(userId);
 
 		return res.status(200).json({ data: services });
-	} catch (error) {
-		return res.status(500).json({ message: 'Could not find service', error });
+	} catch (error: any) {
+		return res.status(500).json({ message: 'Could not find service', error: error.message });
 	}
 };
 
@@ -80,8 +80,8 @@ const deleteService = async (req: Request, res: Response) => {
 		const service = await destroy(serviceId);
 		if (service) await cloudinary.uploader.destroy(service.fileKey!, {});
 		return res.status(200).json({ message: 'Service has been deleted.' });
-	} catch (error) {
-		return res.status(500).json({ message: 'Could not delete service', error });
+	} catch (error: any) {
+		return res.status(500).json({ message: 'Could not delete service', error: error.message });
 	}
 };
 
@@ -100,8 +100,8 @@ const fetchServicesNearYou = async (req: Request, res: Response) => {
 		const services = await servicesNearYou(latitude, longitude, paginateData.offset, paginateData.limit, p, pageSize, distanceInKim);
 
 		return res.status(200).json({ data: services });
-	} catch (error) {
-		return res.status(500).json({ message: 'Could not find service', error });
+	} catch (error: any) {
+		return res.status(500).json({ message: 'Could not find service', error: error.message });
 	}
 };
 
@@ -117,8 +117,8 @@ const suggestedServicesForUser = async (req: Request, res: Response) => {
 		const services = await suggestedServices(category, paginateData.offset, paginateData.limit, p, pageSize);
 
 		return res.status(200).json({ data: services });
-	} catch (error) {
-		return res.status(500).json({ message: 'Could not find service', error });
+	} catch (error: any) {
+		return res.status(500).json({ message: 'Could not find service', error: error.message });
 	}
 };
 

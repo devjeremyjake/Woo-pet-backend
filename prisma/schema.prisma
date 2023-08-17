@@ -58,17 +58,17 @@ model Account {
 }
 
 model Pets {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId       String   @db.ObjectId
-  imageUrl     String
-  imageKey     String
-  name         String
-  badBehavior  String
-  goodBehavior String
-  vaccinations String[]
-  gender       String
-  weight       String
-  age          String
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @db.ObjectId
+  imageUrl      String
+  imageKey      String
+  name          String
+  badBehaviour  String[]
+  goodBehaviour String[]
+  vaccinations  String[]
+  gender        String
+  weight        String
+  age           String
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

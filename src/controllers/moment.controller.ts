@@ -22,9 +22,9 @@ const store = async (req: Request, res: Response) => {
 		});
 
 		return res.status(201).json({ message: 'Moment added successfully', data: response });
-	} catch (error) {
+	} catch (error: any) {
 		await cloudinary.uploader.destroy(imageKey!);
-		return res.status(500).json({ message: 'Could not create moment', error });
+		return res.status(500).json({ message: 'Could not create moment', error: error.message });
 	}
 };
 
@@ -36,8 +36,8 @@ const momentsByUser = async (req: Request, res: Response) => {
 		const moments = await getAllUserMoments(userId);
 
 		return res.status(200).json({ data: moments });
-	} catch (error) {
-		return res.status(500).json({ message: 'Could not find moment', error });
+	} catch (error: any) {
+		return res.status(500).json({ message: 'Could not find moment', error: error.message });
 	}
 };
 
@@ -49,8 +49,8 @@ const deleteMoment = async (req: Request, res: Response) => {
 		const moment = await destroy(momentId);
 		if (moment) await cloudinary.uploader.destroy(moment.imageKey!, {});
 		return res.status(200).json({ message: 'Service has been deleted.' });
-	} catch (error) {
-		return res.status(500).json({ message: 'Could not delete moment', error });
+	} catch (error: any) {
+		return res.status(500).json({ message: 'Could not delete moment', error: error.message });
 	}
 };
 
@@ -63,8 +63,8 @@ const upsertLike = async (req: Request, res: Response) => {
 		const moments = await likeOrUnlike(momentId, userId, isLiked);
 
 		return res.status(202).json({ message: 'Moment was successfully updated.', data: moments });
-	} catch (error) {
-		return res.status(500).json({ message: 'Could not update moment', error });
+	} catch (error: any) {
+		return res.status(500).json({ message: 'Could not update moment', error: error.message });
 	}
 };
 

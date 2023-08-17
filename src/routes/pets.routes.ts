@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { authenticate } from '../../middleware/authenticate';
 import { store, fetchUserPets } from '../controllers/pets.controller';
+import { cloudinaryParser } from '../../middleware/cloudinary';
 
 const router: Router = Router();
 
@@ -19,36 +20,53 @@ const router: Router = Router();
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: body
- *         in: body
- *         schema:
- *           type: object
- *           properties:
- *             name:
- *               type: string
- *             badBehaviour:
- *               type: string
- *             goodBehaviour:
- *               type: string
- *             vaccinations:
- *               type: string
- *             gender:
- *               type: string
- *             weight:
- *               type: string
- *             age:
- *               type: string
- *         required:
- *           - name
- *           - email
- *           - password
- *           - long
- *           - lat
- *           - city
- *           - country
+ *       - in: formData
+ *         name: image
+ *         type: file
+ *         required: true
+ *       - in: formData
+ *         name: name
+ *         type: string
+ *         required: true
+ *       - in: formData
+ *         name: type
+ *         type: string
+ *         required: true
+ *       - in: formData
+ *         name: badBehaviour
+ *         type: array
+ *         items:
+ *           type: string
+ *         required: true
+ *       - in: formData
+ *         name: goodBehaviour
+ *         type: array
+ *         items:
+ *           type: string
+ *         required: true
+ *       - in: formData
+ *         name: vaccinations
+ *         type: array
+ *         items:
+ *           type: string
+ *         required: true
+ *       - in: formData
+ *         name: gender
+ *         type: string
+ *         required: true
+ *       - in: formData
+ *         name: weight
+ *         type: string
+ *         required: true
+ *       - in: formData
+ *         name: age
+ *         type: string
+ *         required: true
  *     responses:
  *       201:
  *         description: Created
+ *       203:
+ *         description: Error
  *       400:
  *         description: Bad request
  *       422:
@@ -56,7 +74,7 @@ const router: Router = Router();
  *       500:
  *         description: Internal server error
  */
-router.post('users/pets/store', authenticate, store);
+router.post('users/pets/store', authenticate, cloudinaryParser.single('image'), store);
 
 /**
  * @swagger

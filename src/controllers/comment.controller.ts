@@ -21,8 +21,8 @@ const store = async (req: Request, res: Response) => {
 		});
 
 		return res.status(201).json({ message: 'Comment added successfully', data: response });
-	} catch (error) {
-		return res.status(500).json({ message: 'Could not add comment to moment', error });
+	} catch (error: any) {
+		return res.status(500).json({ message: 'Could not add comment to moment', error: error.message });
 	}
 };
 
@@ -33,8 +33,8 @@ const getAllMomentComments = async (req: Request, res: Response) => {
 		const comments = await getAll(id);
 
 		return res.status(200).json({ data: comments });
-	} catch (error) {
-		return res.status(500).json({ message: 'Could not fetch moment\'s comments', error });
+	} catch (error: any) {
+		return res.status(500).json({ message: 'Could not fetch moment\'s comments', error: error.message });
 	}
 };
 
