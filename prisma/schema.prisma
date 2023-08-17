@@ -128,13 +128,14 @@ model Order {
   walkDate     DateTime
   walkDuration Int
   walkTime     String
+  distance     String
   userId       String   @db.ObjectId
   serviceId    String   @db.ObjectId
   review       Review?
   service      Service  @relation(fields: [serviceId], references: [id])
   user         User     @relation(fields: [userId], references: [id])
   payment      Payment?
-  status       String // Define order status (e.g., "pending", "completed", etc.)
+  status       String // Define order status (e.g. "pending", "completed", etc.)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
