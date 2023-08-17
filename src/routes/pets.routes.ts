@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authenticate } from '../../middleware/authenticate';
-import { store, fetchUserPets } from '../controllers/pets.controller';
+import { store, fetchUserPets, deletePet, showPet } from '../controllers/pets.controller';
 import { cloudinaryParser } from '../../middleware/cloudinary';
 
 const router: Router = Router();
@@ -10,7 +10,7 @@ const router: Router = Router();
  * /api/users/pets/store:
  *   post:
  *     tags:
- *       - User
+ *       - Pet
  *     name: Store pet
  *     summary: Store pet
  *     security:
@@ -81,7 +81,7 @@ router.post('users/pets/store', authenticate, cloudinaryParser.single('image'), 
  * /api/users/pets/all:
  *   get:
  *     tags:
- *       - User
+ *       - Pet
  *     name: Fetch all user's pets
  *     summary: Fetch all user's pets
  *     security:
@@ -101,5 +101,73 @@ router.post('users/pets/store', authenticate, cloudinaryParser.single('image'), 
  *         description: Internal server error
  */
 router.get('/users/pets/all', authenticate, fetchUserPets);
+
+/**
+ * @swagger
+ * /api/users/pets/{id}:
+ *   get:
+ *     tags:
+ *       - Pet
+ *     name: Show pet
+ *     summary: Show pet
+ *     security:
+ *       - bearerAuth: []
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: string
+ *         required:
+ *           - id
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/users/pets/:id', showPet);
+
+/**
+ * @swagger
+ * /api/users/pets/delete/{id}:
+ *   delete:
+ *     tags:
+ *       - Pet
+ *     name: User delete pet
+ *     summary: User delete pet
+ *     security:
+ *       - bearerAuth: []
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: string
+ *         required:
+ *           - id
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ */
+router.delete('/users/pets/delete/:id', authenticate, deletePet);
 
 export default router;

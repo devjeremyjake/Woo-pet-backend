@@ -22,6 +22,14 @@ const fetchExistingPet = async (id: string, name: string) => {
 	});
 };
 
+const findPetById = async (
+	id: string
+): Promise<PetsInfo | any> => {
+	return await prisma.pets.findFirst({
+		where: { id }
+	});
+};
+
 const destroy = async (id: string): Promise<PetsInfo> => {
 	return await prisma.pets.delete({
 		where: { id }
@@ -32,5 +40,6 @@ export {
 	createPets,
 	fetchPets,
 	fetchExistingPet,
+	findPetById,
 	destroy
 };

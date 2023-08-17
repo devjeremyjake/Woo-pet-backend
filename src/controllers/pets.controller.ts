@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import prisma from '../config/database';
-import { createPets, fetchExistingPet, fetchPets, destroy } from '../models/pets.model';
+import { createPets, fetchExistingPet, fetchPets, destroy, findPetById } from '../models/pets.model';
 import { cloudinary } from '../../middleware/cloudinary';
 
 const store = async (req: Request, res: Response) => {
@@ -51,6 +51,19 @@ const fetchUserPets = async (req: Request, res: Response) => {
 	}
 };
 
+const showPet = async (req: Request, res: Response) => {
+	const petId = req.params.id;
+
+	try {
+		// Find pet by id
+		const pet = await findPetById(petId);
+
+		return res.status(200).json({ data: pet });
+	} catch (error: any) {
+		return res.status(500).json({ message: 'Could not find pet', error: error.message });
+	}
+};
+
 const deletePet = async (req: Request, res: Response) => {
 	const momentId = req.params.id;
 
@@ -67,5 +80,6 @@ const deletePet = async (req: Request, res: Response) => {
 export {
 	store,
 	fetchUserPets,
-	deletePet
+	deletePet,
+	showPet
 };

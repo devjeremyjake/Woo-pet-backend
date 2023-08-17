@@ -10,7 +10,7 @@ const router: Router = Router();
  * /api/users/services/create:
  *   post:
  *     tags:
- *       - User
+ *       - Service
  *     name: Create service
  *     summary: Create  service
  *     security:
@@ -100,7 +100,7 @@ router.get('/services/:id', showService);
  * /api/users/services:
  *   get:
  *     tags:
- *       - User
+ *       - Service
  *     name: Fetch all user's services
  *     summary: Fetch all user's services
  *     security:
@@ -124,7 +124,7 @@ router.get('/users/services', authenticate, servicesByUser);
  * /api/users/services/delete/{id}:
  *   delete:
  *     tags:
- *       - User
+ *       - Service
  *     name: User delete service
  *     summary: User delete service
  *     security:
