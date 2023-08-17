@@ -16,8 +16,6 @@ const app = express();
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from "swagger-ui-express";
 
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -64,8 +62,7 @@ app.get('/', (req, res) => {
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-	console.error(err);
-	res.status(500).json({ message: 'Internal Server Error' });
+	res.status(500).json({ message: 'Internal Server Error', error: err.message });
 });
 
 export default app;
