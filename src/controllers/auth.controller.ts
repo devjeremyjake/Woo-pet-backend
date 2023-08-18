@@ -49,12 +49,20 @@ const register = async (req: Request, res: Response) => {
 const login = async (req: Request, res: Response) => {
 	const { email, password } = req.body;
 	try {
-		if (!email || !password) return res.status(203).json({ error: true, message: 'Fields are required' });
-		
+		if (!email || !password)
+			return res
+				.status(203)
+				.json({ error: true, message: 'Fields are required' });
+
 		const existingUser = await findUserByEmail(email);
-		if (!existingUser) return res.status(203).json({ error: true, message: 'User not found' });
-		const passwordMatch = await bcrypt.compare(password, existingUser.hashedPassword);
-		if (!passwordMatch) return res.status(401).json({ error: 'Invalid credentials' });
+		if (!existingUser)
+			return res.status(203).json({ error: true, message: 'User not found' });
+		const passwordMatch = await bcrypt.compare(
+			password,
+			existingUser.hashedPassword
+		);
+		if (!passwordMatch)
+			return res.status(401).json({ error: 'Invalid credentials' });
 
 		cookieToken(existingUser, res, 'Login successful');
 	} catch (error) {
@@ -86,12 +94,16 @@ const verifySignupOtp = async (req: Request, res: Response) => {
 	try {
 		const userId = req.userId;
 		const existingUser = await findUserById(userId);
-		if (!existingUser) return res.status(203).json({ error: true, message: 'User not found' });
-		
-		// check if otp is same
-		if (!verifyOtpValidity(existingUser, otp)) return res.status(203).json({ error: 'Invalid OTP or OTP expired' });
+		if (!existingUser)
+			return res.status(203).json({ error: true, message: 'User not found' });
 
-		return res.status(200).json({ error: false, message: 'OTP Verified Successfully' });
+		// check if otp is same
+		if (!verifyOtpValidity(existingUser, otp))
+			return res.status(203).json({ error: 'Invalid OTP or OTP expired' });
+		await updateUser(existingUser?.email, { isVerified: true });
+		return res
+			.status(200)
+			.json({ error: false, message: 'OTP Verified Successfully' });
 	} catch (error) {
 		return res.status(500).json({ error: 'Internal Server Error' });
 	}
@@ -102,12 +114,18 @@ const verifyOtp = async (req: Request, res: Response) => {
 	try {
 		const userId = req.userId;
 		const existingUser = await findUserById(userId);
-		if (!existingUser) return res.status(203).json({ error: true, message: 'User not found' });
-		
-		// check if otp is same
-		if (!verifyOtpValidity(existingUser, otp)) return res.status(401).json({ error: 'Invalid OTP or OTP expired' });
+		if (!existingUser)
+			return res.status(203).json({ error: true, message: 'User not found' });
 
-		cookieToken(existingUser, res, 'OTP verified successfully. Provide new password');
+		// check if otp is same
+		if (!verifyOtpValidity(existingUser, otp))
+			return res.status(401).json({ error: 'Invalid OTP or OTP expired' });
+
+		cookieToken(
+			existingUser,
+			res,
+			'OTP verified successfully. Provide new password'
+		);
 	} catch (error) {
 		return res.status(500).json({ error: 'Internal Server Error' });
 	}
